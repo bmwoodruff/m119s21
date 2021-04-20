@@ -39,3 +39,18 @@ f4(-0.5)
 f4(5.2)
 f4(-1)
 
+#for fun, let's plot it. 
+x <- seq(-2,5,0.01)
+y <- f4(x)
+plot(x,y, type = "l")
+
+#Here is a prettied up plot. 
+x <- seq(-2.5,36,0.01)
+y <- f4(x)
+par(mfrow=c(1,1),mar=c(2.5,2.5,1,0.25))
+plot(x,y,type='l')
+abline(v=0,lty=3,col='gray')
+abline(h=0,lty=3,col='gray')
+points(c(-1,-1,4),c(-1,-2,-2))
+points(4,2,pch=16)
+
