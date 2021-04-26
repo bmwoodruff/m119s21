@@ -42,7 +42,6 @@ f4(-1)
 #for fun, let's plot it. 
 x <- seq(-2,5,0.01)
 y <- f4(x)
-plot(x,y, type = "l")
 
 #Here is a prettied up plot. 
 x <- seq(-2.5,36,0.01)
