@@ -1,0 +1,32 @@
+---
+title: "Class Example Task 1"
+author: "Ben Woodruff"
+date: "4/27/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Background
+
+In here we'll put some background information. Grabbing it from online works.  
+
+## Task 1
+This code creates a data frame called “dist”. The dist data frame contains measurements for 202 light bulbs 2104 hours after the the light bulb was turned on.
+
+```{r}
+library(data4led)
+dist <- led_time(2100)
+```
+
+The data frame named “dist” includes the columns (1) “id”, the identification number for your randomly selected bulb, (2) “hours”, the number of hours since the bulb has turned on, (3) “intensity”, the lumen output of the bulb, and (4) “percent_intensity”, the bulb intensity as a percent of the original lumen.
+
+The histogram below shows the distribution of the "percent intensity" column. 
+
+```{r}
+hist(dist$percent_intensity,xlab='Percent Intensity',ylab='Count',main='Histogram of Percent Intensity')
+```
+
+From the histogram above, we can see that the percent intensities of the bulbs appear to follow some bell shaped distribution.  The center of this bell is around 101.5%.  
