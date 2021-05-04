@@ -43,6 +43,7 @@ We will be exploring the following models.
 2. $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h>0$, $a>0$, and $−\infty<L<\infty$
 3. $f_2(L; h,a,b) = \frac{b^a}{\Gamma(a)}(L-h)^{a-1}e^{-b(L-h)}$ with $a>0$, $b>0$, and $L\geq h$ (and 0 otherwise)
 
+### Model $f_0$
 Let's examine the first model, $f_0$. 
 The variable $a$ controls the starting point of the domain of the function, and similarly $b$ is the end point.  The function is constant.  Let's plot a couple representatives below. 
 
@@ -95,4 +96,55 @@ mtext('Changing a in f0', side = 3, line = 0)
 
 ```
 In the plot above we fixed $a=97$ and then changed $b$ from 102 to 109.  Increasing $b$ caused the graph to be wider and shorter. 
+
+
+### Model $f_1$
+We now examine the second model, $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h>0$, $a>0$, and $−\infty<L<\infty$. 
+This model produces a mound shaped curve. The output of the function is all positive. The values increase until $h$, and then decrease after $h$. The variable $a$ controls how sharply the mound spikes upwards before dropping.  Let's view this in several examples. 
+
+In the pictures below, we'll fix $a=2$ and then change $h$ from 99 to 102. Notice that the value of $h$ just causes the model to recenter the graph around the values $h$. 
+
+```{r}
+f1 <- function(L,h=0,a=1){
+#Make sure h > 0 and a > 0.
+
+1/sqrt(2*pi*a)*exp(-(L-h)^2/(2*a))
+}
+
+a <- 2
+L <- seq(80,120,0.1)
+h1 <- 99
+y1 <- f1(L,h1,a)
+
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(L,y1,type='l',xlim=c(80,120))
+
+h2 <- 102
+y2 <- f1(L,h2,a)
+
+plot(L,y2,type='l',xlim=c(80,120))
+mtext('Changing h in f1', side = 3, line = 0)
+```
+
+Now we'll fix $h=101$, and change the value of $a$ from 2 to 1, in the graph below, and focus on the fact that a smaller value for $a$ causes the graph to spike more rapidly (reaches a higher value over a smaller width). 
+
+```{r}
+a1 <- 2
+L <- seq(80,120,0.1)
+h <- 101
+y1 <- f1(L,h,a1)
+
+par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
+plot(L,y1,type='l',xlim=c(80,120), ylim=c(0,0.5))
+
+a2 <- 1
+y2 <- f1(L,h,a2)
+
+plot(L,y2,type='l',xlim=c(80,120), ylim=c(0,0.5))
+mtext('Changing a in f1', side = 3, line = 0)
+
+```
+
+In summary, the parameter $h$ tells us where the peak of the mound is at, while the variable $a$ controld how tall peak gets to (as well as how wide the mound is). 
+
 
