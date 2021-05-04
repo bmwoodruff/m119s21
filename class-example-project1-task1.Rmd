@@ -2,7 +2,11 @@
 title: "Class Example Task 1"
 author: "Ben Woodruff"
 date: "4/27/2021"
-output: html_document
+output: 
+  html_document:
+    code_folding: show
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -26,7 +30,9 @@ The data frame named “dist” includes the columns (1) “id”, the identific
 The histogram below shows the distribution of the "percent intensity" column. 
 
 ```{r}
-hist(dist$percent_intensity,xlab='Percent Intensity',ylab='Count',main='Histogram of Percent Intensity')
+hist(dist$percent_intensity,xlab='Percent Intensity',ylab='Count',main='Histogram of Percent Intensity', probability=TRUE)
 ```
 
 From the histogram above, we can see that the percent intensities of the bulbs appear to follow some bell shaped distribution.  The center of this bell is around 101.5%.  
+
+
