@@ -21,7 +21,7 @@ uniroot(g,c(-2,3))$root
 
 
 
-
+ 
 rm(list=ls())
 f <- function(x){
   (-13 + 2*x)*exp(-0.05*x)
