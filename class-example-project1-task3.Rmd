@@ -1,0 +1,99 @@
+---
+title: "Class Example Task 3"
+author: "Ben Woodruff"
+date: "5/11/2021"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Background
+
+Measurements have uncertainty or variation. How can we model that uncertainty and use those models to answer questions? In this project, we'll be fitting the data to stochastic models $f(L)$ that give the probability information about different lumen output of LED bulbs (as a percent of the initial lumens).  
+
+In this third portion of the example project, we'll visually fit several models to the hisotgram that displays the lumen output for several bulbs 2100 hours after the bulbs were turned on. 
+
+## Task 3
+In the first task we constructed the following histogram to show the distribution of lumens of 204 bulbs, precisely 2100 hours after they were turned on. 
+
+```{r}
+library(data4led)
+dist <- led_time(2100)
+x <- dist$percent_intensity
+
+par(mfrow=c(1,1),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+hist(x,probability = TRUE, xlim=c(98,105),ylim=c(0,0.8), main="Histogram of Lightbulb Intensities \n after 2104 hours")
+```
+
+The first model we examined was $f_0(L; a,b) = \frac{1}{b-a}$ with $-\infty < a < L < b < \infty$ (and 0 otherwise).  
+Using the parameters $a=99.5$ and $b=103.5$, we obtain the following visual fit.  
+
+```{r}
+f0 <- function(L,a=0,b=1){
+# Make sure a < b.
+
+out <- rep(0,length(L))
+out[(L <= a)] <- 0
+out[(a < L) & (L < b)] <- 1/(b-a) + 0*L[(a < L) & (L < b)]
+out[(L >=b)] <-0
+
+return(out)
+}
+
+L3 <- seq(98,105,0.01)
+y3 <- f0(L3,a=99.5,b=103.5)
+x <- dist$percent_intensity
+
+par(mfrow=c(1,1),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+hist(x,probability = TRUE,xlim=c(98,105),ylim=c(0,0.8),main="Histogram of Lightbulb Intensities \n with fitted f0 function")
+lines(L3,y3,col=2)
+```
+
+The second model we examined was $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h>0$, $a>0$, and $−\infty<L<\infty$. 
+Using the parameters $h=101.5$ and $a=0.5$, we obtain the following visual fit.  
+
+```{r}
+f1 <- function(L,h=0,a=1){
+#Make sure h > 0 and a > 0.
+1/sqrt(2*pi*a)*exp(-(L-h)^2/(2*a))
+}
+
+L2 <- seq(98,105,0.01)
+y2 <- f1(L2,h=101.5,a=0.5)
+x <- dist$percent_intensity
+
+par(mfrow=c(1,1),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+hist(x,probability = TRUE,xlim=c(98,105),ylim=c(0,0.8),main="Histogram of Lightbulb Intensities \n with fitted f1 function")
+lines(L2,y2,col=2)
+```
+
+The third model we examined was $f_2(L; h,a,b) = \frac{b^a}{\Gamma(a)}(L-h)^{a-1}e^{-b(L-h)}$ with $a>0$, $b>0$, and $L\geq h$ (and 0 otherwise). 
+Using the parameters $h=98.45$, $a=25.8$, and $b=8.5$, we obtain the following visual fit. 
+
+```{r}
+f2 <- function(L,h=0,a=1,b=5){
+# Make sure a > 0 and b > 0.
+
+out <- rep(-1,length(L))
+out[(L < h)] <- 0*L[(L < h)]
+out[(L >= h)] <- b^a/gamma(a)*(L[(L >= h)]-h)^(a-1)*exp(-b*(L[(L >= h)]-h))
+
+return(out)
+}
+
+L1 <- seq(98,105,0.01)
+y1 <- f2(L1,h=98.45,a=25.8,b=8.5)
+x <- dist$percent_intensity
+
+par(mfrow=c(1,1),mar=c(2,2,3,0.25),oma=rep(0.5,4))
+hist(x,probability = TRUE,xlim=c(98,105),ylim=c(0,0.8),main="Histogram of Lightbulb Intensities \n with fitted f2 function")
+lines(L1,y1,col=2)
+```
+
+While the project instuctions don't ask yet for any judgement calls on the fitted models above, I think it's safe to say that the first model (the one that is constant over the domain) is a poor fit.  Whether the second model (normal distibution) or third model (gamma distribution) is the better fit is not somethig we'll be able to answer at this point. Both seem to capture the story told by the data. The third distribution is right skewed, while the middle distribution is symmetrical. 
