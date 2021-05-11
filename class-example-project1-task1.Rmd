@@ -1,7 +1,7 @@
 ---
 title: "Class Example Task 1"
 author: "Ben Woodruff"
-date: "5/4/2021"
+date: "4/27/2021"
 output: 
   html_document:
     code_folding: hide
@@ -15,10 +15,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Background
 
-In here we'll put some background information. Grabbing it from online works.  
+Measurements have uncertainty or variation. How can we model that uncertainty and use those models to answer questions? In this project, we'll be fitting the data to stochastic models $f(L)$ that give the probability information about different lumen output of LED bulbs (as a percent of the initial lumens).  In this first portion of the example project, we'll construct a hisotgram that displays the lumen output for several bulbs 2100 hours after the bulbs were turned on. 
+
+
 
 ## Task 1
-This code creates a data frame called “dist”. The dist data frame contains measurements for 202 light bulbs 2104 hours after the the light bulb was turned on.
+This code creates a data frame called “dist”. The dist data frame contains measurements for 202 light bulbs 2100 hours after the the light bulb was turned on.
 
 ```{r}
 library(data4led)
@@ -34,117 +36,4 @@ hist(dist$percent_intensity,xlab='Percent Intensity',ylab='Count',main='Histogra
 ```
 
 From the histogram above, we can see that the percent intensities of the bulbs appear to follow some bell shaped distribution.  The center of this bell is around 101.5%.  
-
-## Task 2
-
-We will be exploring the following models. 
-
-1. $f_0(L; a,b) = \frac{1}{b-a}$ with $-\infty < a < L < b < \infty$ (and 0 otherwise)
-2. $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h>0$, $a>0$, and $−\infty<L<\infty$
-3. $f_2(L; h,a,b) = \frac{b^a}{\Gamma(a)}(L-h)^{a-1}e^{-b(L-h)}$ with $a>0$, $b>0$, and $L\geq h$ (and 0 otherwise)
-
-### Model $f_0$
-Let's examine the first model, $f_0$. 
-The variable $a$ controls the starting point of the domain of the function, and similarly $b$ is the end point.  The function is constant.  Let's plot a couple representatives below. 
-
-```{r}
-f0 <- function(L,a=0,b=1){
-  # Make sure a < b when using this function.
-  
-  out <- rep(-1,length(L))
-  out[(L <= a)] <- 0
-  out[(a < L) & (L < b)] <- 1/(b-a) + 0*L[(a < L) & (L < b)]
-  out[(L >=b)] <-0
-  
-  return(out)
-}
-
-b <- 102
-a1 <- 97
-L1 <- seq(a1,b,0.1)
-y1 <- f0(L1,a1,b)
-
-par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
-plot(L1,y1,type='l',xlim=c(90,110), ylim=c(0,0.35))
-
-a2 <- 99
-L2 <- seq(a2,b,0.1)
-y2 <- f0(L2,a2,b)
-
-plot(L2,y2,type='l',xlim=c(90,110), ylim=c(0,0.35))
-mtext('Changing a in f0', side = 3, line = 0)
-
-```
-
-In the two plots above we chose $b=102$, and changed $a$ from 97 to 99.  Making $a$ closer to $b$ causes the graph to be narrow and higher.   We can similarly see what happens as we change $b$, which we will do in the plots below. 
-
-```{r}
-b1 <- 102
-a <- 97
-L1 <- seq(a,b1,0.1)
-y1 <- f0(L1,a,b1)
-
-par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
-plot(L1,y1,type='l',xlim=c(90,110), ylim=c(0,0.25))
-
-b2 <- 109
-L2 <- seq(a,b2,0.1)
-y2 <- f0(L2,a,b2)
-
-plot(L2,y2,type='l',xlim=c(90,110), ylim=c(0,0.25))
-mtext('Changing a in f0', side = 3, line = 0)
-
-```
-In the plot above we fixed $a=97$ and then changed $b$ from 102 to 109.  Increasing $b$ caused the graph to be wider and shorter. 
-
-
-### Model $f_1$
-We now examine the second model, $f_1(L; h,a) = \frac{1}{\sqrt{2\pi a}}e^{-\frac{(x-h)^2}{2a}}$ with $h>0$, $a>0$, and $−\infty<L<\infty$. 
-This model produces a mound shaped curve. The output of the function is all positive. The values increase until $h$, and then decrease after $h$. The variable $a$ controls how sharply the mound spikes upwards before dropping.  Let's view this in several examples. 
-
-In the pictures below, we'll fix $a=2$ and then change $h$ from 99 to 102. Notice that the value of $h$ just causes the model to recenter the graph around the values $h$. 
-
-```{r}
-f1 <- function(L,h=0,a=1){
-#Make sure h > 0 and a > 0.
-
-1/sqrt(2*pi*a)*exp(-(L-h)^2/(2*a))
-}
-
-a <- 2
-L <- seq(80,120,0.1)
-h1 <- 99
-y1 <- f1(L,h1,a)
-
-par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
-plot(L,y1,type='l',xlim=c(80,120))
-
-h2 <- 102
-y2 <- f1(L,h2,a)
-
-plot(L,y2,type='l',xlim=c(80,120))
-mtext('Changing h in f1', side = 3, line = 0)
-```
-
-Now we'll fix $h=101$, and change the value of $a$ from 2 to 1, in the graph below, and focus on the fact that a smaller value for $a$ causes the graph to spike more rapidly (reaches a higher value over a smaller width). 
-
-```{r}
-a1 <- 2
-L <- seq(80,120,0.1)
-h <- 101
-y1 <- f1(L,h,a1)
-
-par(mfrow=c(1,2),mar=c(2.5,2.5,1,0.25))
-plot(L,y1,type='l',xlim=c(80,120), ylim=c(0,0.5))
-
-a2 <- 1
-y2 <- f1(L,h,a2)
-
-plot(L,y2,type='l',xlim=c(80,120), ylim=c(0,0.5))
-mtext('Changing a in f1', side = 3, line = 0)
-
-```
-
-In summary, the parameter $h$ tells us where the peak of the mound is at, while the variable $a$ controld how tall peak gets to (as well as how wide the mound is). 
-
 
