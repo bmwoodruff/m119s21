@@ -42,7 +42,7 @@ plot(x,p(x,10))
 
 x <- seq(1,20,1)
 plot(x,p(x,7.6))
-#It appears that the mode of the Poisson distrubution occurs at or near $\lambda$.
+#It appears that the mode of the Poisson distribution occurs at or near $\lambda$.
 
 p.3v1 <- function(x,lambda=2){
   # each element of x must be a whole number
