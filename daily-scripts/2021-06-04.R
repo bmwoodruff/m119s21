@@ -176,7 +176,7 @@ h(cv.2)
 h(2)
 
 
-cvs <- c(-1,-sqrt(1/3),cv.1, sqrt(1/3),cv.2,2)
+cvs <- c(-1,-sqrt(1/3 ),cv.1, sqrt(1/3),cv.2,2)
 cvs
 h(cvs)
 max(h(cvs))
